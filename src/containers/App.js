@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import myclass from'./App.module.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
-
+import withClass from '../hoc/withClass';
+import Aux from '../hoc/Auxiliary';
 class App extends Component{
   constructor(props){
     super(props);
@@ -12,12 +13,13 @@ class App extends Component{
 
   state = {
     persons: [
-      {id: '1', name: 'Hari', age: 21},
+      {id: '1', name: 'Hari', age: '21'},
       {id: '2', name: 'Mani', age: 19},
       {id: '3', name: 'Ram', age: 25}
     ],
     otherState: 'something else',
-    showPersons: false
+    showPersons: false,
+    changedCounter : 0
   };
   
   static getDerivedStateFromProps(state, props){
@@ -50,8 +52,13 @@ class App extends Component{
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState({persons: persons})
-  }
+    this.setState((prevState, props) => {
+      return {
+        persons: persons,
+        changedCounter: prevState.changedCounter+1
+      };
+    });
+  };
 
   deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
@@ -75,17 +82,17 @@ class App extends Component{
     }
     
     return ( 
-      <div className={myclass.App}>
+      <Aux>
         <h1>Hello, Samiatrix</h1>
         <Cockpit 
           showPersons = {this.state.showPersons} 
           personsLength = {this.state.persons.length} 
           clicked = {this.togglehandler}/>
         {persons}
-      </div>
+      </Aux>
     );
   }
 }
 
 
-export default App;
+export default withClass(App, myclass .App);

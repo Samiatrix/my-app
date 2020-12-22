@@ -1,11 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import classes from './Cockpit.module.css';
 const Cockpit = (props) => {
+
+  const toggleButtonRef = useRef(null);
+
     useEffect(() => {
       console.log('[Cockpit.js] useEffect');
-      setTimeout(() => {
-        alert('Saved automatically');
-      }, 1000);
+      
+      toggleButtonRef.current.click();
+
       return () => {
         console.log('[Cockpit.js] cleanup work in useEffect');
       };
@@ -28,11 +31,14 @@ const Cockpit = (props) => {
       assignedClasses.push(classes.bold);
     }
     return (
-        <div className = {classes.Cockpit}>
-            <p className = {assignedClasses.join(' ')}> Welcome to the Samiatrix Channel</p>
-                    <button 
-                        className = {btnClass} 
-                        onClick = {props.clicked}>Switch</button>
+      <div className = {classes.Cockpit}>
+        <p className = {assignedClasses.join(' ')}> Welcome to the Samiatrix Channel</p>
+        <button 
+          ref = {toggleButtonRef}
+          className = {btnClass} 
+          onClick = {props.clicked}>
+            Switch
+          </button>
         </div>
         
             
