@@ -4,6 +4,7 @@ import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import withClass from '../hoc/withClass';
 import Aux from '../hoc/Auxiliary';
+import AuthContext from '../context/auth-context';
 class App extends Component{
   constructor(props){
     super(props);
@@ -13,13 +14,14 @@ class App extends Component{
 
   state = {
     persons: [
-      {id: '1', name: 'Hari', age: '21'},
+      {id: '1', name: 'Hari', age: 21},
       {id: '2', name: 'Mani', age: 19},
       {id: '3', name: 'Ram', age: 25}
     ],
     otherState: 'something else',
     showPersons: false,
-    changedCounter : 0
+    changedCounter : 0,
+    authenticated : false
   };
   
   static getDerivedStateFromProps(state, props){
@@ -65,7 +67,9 @@ class App extends Component{
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
   }
-
+  loginHandler = () => {
+    this.setState({authenticated: true});
+  }
   togglehandler = () => {
     const flag = this.state.showPersons;
     this.setState({showPersons: !flag});
@@ -78,21 +82,27 @@ class App extends Component{
       persons = <Persons
             persons = {this.state.persons}
             clicked = {this.deletePersonHandler}
-            changed = {this.changehandler}/> ; 
+            changed = {this.changehandler}
+            isAuthenticated = {this.state.authenticated}
+          /> 
     }
     
     return ( 
       <Aux>
         <h1>Hello, Samiatrix</h1>
-        <Cockpit 
-          showPersons = {this.state.showPersons} 
-          personsLength = {this.state.persons.length} 
-          clicked = {this.togglehandler}/>
-        {persons}
+        <AuthContext.Provider value = {{autheticated: this.state.authenticated, login: this.loginHandler}}>
+          <Cockpit 
+            showPersons = {this.state.showPersons} 
+            personsLength = {this.state.persons.length} 
+            clicked = {this.togglehandler}
+            login = {this.loginHandler}  
+          />
+          {persons}
+        </AuthContext.Provider>
       </Aux>
     );
   }
 }
 
 
-export default withClass(App, myclass .App);
+export default withClass(App, myclass.App);
